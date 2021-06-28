@@ -1,0 +1,19 @@
+// CSS RESET
+@import '../../../node_modules/modern-normalize/modern-normalize.css';
+// GOOGLE FONTS
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+$orange: #e9872b;
+$white: #eaeff0;
+$green: #d2dbd7;
+
+body {
+  background-color: #e4e2dc;
+}
+
+#app {
+  font-family: 'Noto Sans KR', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+}
