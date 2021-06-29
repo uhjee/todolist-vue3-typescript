@@ -1,7 +1,16 @@
 <template>
   <div class="frame box">
-    <div class="box__header">header</div>
-    <div class="box__body">body</div>
+    <div class="box__header">
+      <div class="title-bar flex center-h">
+        <circle-btn />
+        <circle-btn color="red" />
+        <circle-btn color="blue" />
+      </div>
+    </div>
+    <div class="box__body">
+      <component :is="currentTab"></component>
+    </div>
+
     <div class="box__footer">
       <input
         class="input-todo"
@@ -9,29 +18,36 @@
         @input="changeInputTodo($event.target.value)"
         type="text"
       />
-      <my-button color="red">Add</my-button>
-      <!-- <my-button>Add</my-button> -->
-      <!-- <my-button color="yellow">Add</my-button> -->
+      <square-btn color="red">Add</square-btn>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import MyButton from './MyButton.vue';
+import { defineComponent, ref } from 'vue';
+import SquareBtn from './components/SquareBtn.vue';
+import CircleBtn from './components/CircleBtn.vue';
+import TodoList from './TodoList/index.vue';
 
 export default defineComponent({
   name: 'Frame',
-  components: { MyButton },
-  data() {
-    return {
-      inputTodo: '' as string,
+  components: { SquareBtn, CircleBtn, TodoList },
+  setup() {
+    // currentTab
+    const currentTab = ref('TodoList');
+
+    // inputTodo
+    const inputTodo = ref('');
+
+    const changeInputTodo = (value: string): void => {
+      inputTodo.value = value.trim();
     };
-  },
-  methods: {
-    changeInputTodo(value: string): void {
-      this.inputTodo = value.trim();
-    },
+
+    return {
+      inputTodo,
+      changeInputTodo,
+      currentTab,
+    };
   },
 });
 </script>
@@ -39,6 +55,7 @@ export default defineComponent({
 <style scoped lang="scss">
 $white: #eaeff0;
 $green: #d2dbd7;
+$grey: #b4b4b4;
 
 .frame {
   display: flex;
@@ -58,37 +75,38 @@ $green: #d2dbd7;
   box-shadow: 2px 2px 2px 1px rgba($color: #858585, $alpha: 0.2);
 
   & > * {
-    padding: 6px 10px;
-
+    padding: 6px 12px;
     display: flex;
   }
 
   .box__header {
     border-radius: 10px 10px 0 0;
     flex: none;
-    background-color: #d2dbd7;
+    background-color: $green;
 
     height: 66px;
   }
   .box__body {
-    border-top: 1px solid rgb(180, 180, 180);
+    border-top: 1px solid $grey;
     flex: 1;
-    padding: 20px 15px;
+    padding: 10px 15px;
   }
   .box__footer {
     flex: none;
     align-items: center;
-    background-color: #d8e0dd;
-    border-top: 1px solid rgb(180, 180, 180);
+    background-color: $green;
+    border-top: 1px solid $grey;
     border-radius: 0 0 10px 10px;
     height: 80px;
 
     input.input-todo {
       margin: 0 4px;
+      padding: 0 15px;
       flex: 1;
       height: 40px;
       outline: none;
       border: none;
+      border-radius: 3px;
     }
   }
 }
