@@ -12,12 +12,12 @@ const COLORS = ['red', 'blue', 'grey', 'yellow', 'green'];
  * @return  {TodoType}[return description]
  */
 export const makeTodo = (): TodoType => ({
+  id: c.fbid(),
   isDone: false,
   color: COLORS[Math.floor(Math.random() * 10) % 5],
   content: c.paragraph(),
-  date: ((d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`)(
-    c.date(),
-  ),
+  atWritten: ((d: Date) =>
+    `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`)(c.date()),
 });
 
 /**

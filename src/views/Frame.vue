@@ -25,9 +25,9 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import SquareBtn from './components/SquareBtn.vue';
-import CircleBtn from './components/CircleBtn.vue';
-import TodoList from './TodoList/index.vue';
+import SquareBtn from '@/components/SquareBtn.vue';
+import CircleBtn from '@/components/CircleBtn.vue';
+import TodoList from '@/views/TodoList/index.vue';
 
 export default defineComponent({
   name: 'Frame',

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Frame from './components/Frame.vue';
+import Frame from '@/views/Frame.vue';
 
 export default defineComponent({
   name: 'App',
