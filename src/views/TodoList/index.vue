@@ -1,46 +1,82 @@
 <template>
   <div class="todo-container">
-    <todo-item></todo-item>
+    <todo-item
+      @changeIsDone="changeIsDone"
+      v-for="todo in todoArr"
+      :key="todo.id"
+      :todoData="todo"
+    ></todo-item>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
 import { TodoType } from '@/types/TodoType';
+import { Events } from '@/types/MittTypes';
+
+import {
+  defineComponent, onMounted, ref, Ref,
+} from 'vue';
 import { makeTodoList } from '@/utils/TodoList';
+import { find, sortBy } from 'lodash';
+import mitt from 'mitt';
 import TodoItem from './TodoItem.vue';
 
 export default defineComponent({
   name: 'TodoList',
   components: { TodoItem },
-  // data() {
-  //   return {
-  //     todoArr: [] as TodoType[],
-  //   };
-  // },
-  // created() {
-  //   this.todoArr = makeTodoList(10);
-  // },
   setup() {
-    let todoArr: TodoType[] = [];
+    const emitter = mitt<Events>();
+
+    const todoArr: Ref<TodoType[]> = ref([]);
 
     const loadData = (): void => {
-      todoArr = makeTodoList(10);
+      todoArr.value = makeTodoList(5);
     };
 
-    const appendData = ():void => {
-      const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+    const appendData = (): void => {
+      const {
+        scrollHeight,
+        scrollTop,
+        clientHeight,
+      } = document.documentElement;
       if (scrollTop + clientHeight > scrollHeight - 5) {
-        const copiedTodoArr = [...todoArr];
+        const copiedTodoArr = [...todoArr.value];
         const newTodoArr = makeTodoList(10);
-        todoArr = copiedTodoArr.concat(newTodoArr);
+        todoArr.value = copiedTodoArr.concat(newTodoArr);
       }
     };
 
-    // onMounted(){
-    //   loadData();
+    const sortTodoArr = (): void => {
+      todoArr.value = sortBy(todoArr.value, ['isDone', 'id']);
+    };
 
-    // };
+    const changeIsDone = (todoData: TodoType) => {
+      const foundTodo = find(todoArr.value, { id: todoData.id }) as TodoType;
+      foundTodo.isDone = !foundTodo.isDone;
+      sortTodoArr();
+    };
+
+    const addTodo = (todoData: TodoType): void => {
+      todoArr.value.push(todoData);
+      sortTodoArr();
+    };
+
+    onMounted(() => {
+      loadData();
+      sortTodoArr();
+
+      emitter.on('addTodo', (newTodo) => {
+        console.log(newTodo);
+
+      // addTodo(newTodo);
+      });
+    });
+
+    return {
+      todoArr,
+      changeIsDone,
+      addTodo,
+    };
   },
 });
 </script>

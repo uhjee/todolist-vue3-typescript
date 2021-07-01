@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "lodash": "^4.17.21",
     "material-icons": "^0.7.4",
+    "mitt": "^3.0.0",
     "modern-normalize": "^1.1.0",
     "ramda": "^0.27.1",
     "vue": "^3.0.0"

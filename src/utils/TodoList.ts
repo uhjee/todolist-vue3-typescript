@@ -13,8 +13,8 @@ const COLORS = ['red', 'blue', 'grey', 'yellow', 'green'];
  */
 export const makeTodo = (): TodoType => ({
   id: c.fbid(),
-  isDone: false,
-  color: COLORS[Math.floor(Math.random() * 10) % 5],
+  isDone: [false, true][Math.floor(Math.random() * 10) % 2], // 랜덤 생성 true or false
+  color: COLORS[Math.floor(Math.random() * 10) % 5], // 랜던 생성
   content: c.paragraph(),
   atWritten: ((d: Date) =>
     `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`)(c.date()),

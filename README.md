@@ -1,5 +1,3 @@
 # todolist-vue3-typescript
 
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+vue3, typescript로 만드는 todo-list

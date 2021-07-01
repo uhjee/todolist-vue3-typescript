@@ -1,12 +1,22 @@
 <template>
   <div class="todo-item">
     <div class="done-btn">
-      <circle-switch></circle-switch>
+      <circle-switch
+        @click="changeIsDone"
+        :color="todoData.color"
+        :isDone="todoData.isDone"
+        :whSize="20"
+      />
     </div>
-    <div class="content"></div>
+    <div :class="['content', { 'content-done': todoData.isDone }]">
+      {{todoData.content}}
+    </div>
     <div class="etc">
-      <div class="close-btn">close</div>
-      <div class="date"></div>
+
+      <div class="delete-btn">
+        <square-btn color="yellow" style="marginRight: 0">delete</square-btn>
+      </div>
+      <div class="date">{{todoData.atWritten}}</div>
     </div>
   </div>
 </template>
@@ -14,12 +24,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import CircleSwitch from '@/components/CircleSwitch.vue';
+import SquareBtn from '@/components/SquareBtn.vue';
 import { TodoType } from '@/types/TodoType';
 
 export default defineComponent({
   name: 'TodoItem',
   components: {
-    CircleSwitch,
+    CircleSwitch, SquareBtn,
   },
   props: {
     todoData: {
@@ -88,10 +99,11 @@ export default defineComponent({
       display: flex;
       align-items: center;
     }
-    .close-btn {
+    .delete-btn {
       font-size: 0.8rem;
     }
     .date {
+      font-size: 0.8rem;
     }
   }
 }

@@ -4,11 +4,11 @@
       <div class="title-bar flex center-h">
         <circle-btn />
         <circle-btn color="red" />
-        <circle-btn color="blue" />
+        <circle-btn color="yellow" />
       </div>
     </div>
     <div class="box__body">
-      <component :is="currentTab"></component>
+      <component ref="boxBody" :is="currentTab" />
     </div>
 
     <div class="box__footer">
@@ -18,21 +18,30 @@
         @input="changeInputTodo($event.target.value)"
         type="text"
       />
-      <square-btn color="red">Add</square-btn>
+      <square-btn @click="addTodo" color="red" height="40">Add</square-btn>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import SquareBtn from '@/components/SquareBtn.vue';
 import CircleBtn from '@/components/CircleBtn.vue';
+import { TodoType } from '@/types/TodoType';
+import { Events } from '@/types/MittTypes';
+
+import chance from 'chance';
+import mitt from 'mitt';
+
 import TodoList from '@/views/TodoList/index.vue';
 
 export default defineComponent({
   name: 'Frame',
   components: { SquareBtn, CircleBtn, TodoList },
   setup() {
+    const emitter = mitt<Events>();
+
+    const c = chance();
     // currentTab
     const currentTab = ref('TodoList');
 
@@ -43,10 +52,31 @@ export default defineComponent({
       inputTodo.value = value.trim();
     };
 
+    const boxBody = ref(null);
+
+    const addTodo = (): void => {
+      if (currentTab.value === 'TodoList') {
+        const newTodo:TodoType = {
+          id: c.fbid(),
+          color: 'red',
+          isDone: false,
+          content: inputTodo.value,
+          atWritten: ((d: Date) =>
+            `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`)(new Date()),
+        };
+        emitter.emit('addTodo', newTodo);
+      }
+    };
+
+    onMounted(() => {
+      console.log(boxBody.value);
+    });
     return {
       inputTodo,
       changeInputTodo,
       currentTab,
+      addTodo,
+      boxBody,
     };
   },
 });
@@ -90,6 +120,11 @@ $grey: #b4b4b4;
     border-top: 1px solid $grey;
     flex: 1;
     padding: 10px 15px;
+    margin: {
+      bottom: 20px;
+    }
+
+    overflow-y: auto;
   }
   .box__footer {
     flex: none;

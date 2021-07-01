@@ -1,24 +1,20 @@
 <template>
-  <div
-    :class="getClass"
-    :style="{ backgroundColor: getColor }"
-    @mouseover="changeColor"
-  >
+  <div :class="getClass" :style="getStyle" @mouseover="changeColor">
     <div class="flex center-h">
       <slot> </slot>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'SquareBtn',
   props: {
-    mini: {
-      type: Boolean,
-      default: false,
+    height: {
+      type: String,
+      default: 'auto',
     },
     text: {
       type: String,
@@ -46,10 +42,15 @@ export default defineComponent({
           throw new Error('색상을 선택해야합니다.');
       }
     },
-    getClass() {
+    getClass(): {btn: boolean} {
       return {
         btn: true,
-        mini: this.mini,
+      };
+    },
+    getStyle() : {backgroundColor: string, height: string} {
+      return {
+        backgroundColor: this.getColor,
+        height: this.height === 'auto' ? 'auto' : `${this.height}px`,
       };
     },
   },
@@ -63,7 +64,7 @@ export default defineComponent({
 .btn {
   display: inline-block;
   box-sizing: border-box;
-  height: 40px;
+  // height: 40px;
 
   margin: 3px 4px;
   padding: 6px 15px;
