@@ -24,14 +24,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import {
+  defineComponent, ref, onMounted, getCurrentInstance,
+} from 'vue';
 import SquareBtn from '@/components/SquareBtn.vue';
 import CircleBtn from '@/components/CircleBtn.vue';
 import { TodoType } from '@/types/TodoType';
-import { Events } from '@/types/MittTypes';
 
 import chance from 'chance';
-import mitt from 'mitt';
 
 import TodoList from '@/views/TodoList/index.vue';
 
@@ -39,9 +39,10 @@ export default defineComponent({
   name: 'Frame',
   components: { SquareBtn, CircleBtn, TodoList },
   setup() {
-    const emitter = mitt<Events>();
-
+    const instance = getCurrentInstance();
+    const emitter = instance?.appContext.app.config.globalProperties.emitter;
     const c = chance();
+
     // currentTab
     const currentTab = ref('TodoList');
 
@@ -55,16 +56,23 @@ export default defineComponent({
     const boxBody = ref(null);
 
     const addTodo = (): void => {
+      if (inputTodo.value.trim() === '') {
+        return;
+      }
       if (currentTab.value === 'TodoList') {
-        const newTodo:TodoType = {
+        const newTodo: TodoType = {
           id: c.fbid(),
           color: 'red',
           isDone: false,
           content: inputTodo.value,
           atWritten: ((d: Date) =>
-            `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`)(new Date()),
+            `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`)(
+            new Date(),
+          ),
         };
         emitter.emit('addTodo', newTodo);
+
+        inputTodo.value = '';
       }
     };
 
@@ -142,6 +150,7 @@ $grey: #b4b4b4;
       outline: none;
       border: none;
       border-radius: 3px;
+      background-color: $white;
     }
   }
 }

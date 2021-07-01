@@ -14,7 +14,7 @@
     <div class="etc">
 
       <div class="delete-btn">
-        <square-btn color="yellow" style="marginRight: 0">delete</square-btn>
+        <square-btn @click="deleteTodo" color="yellow" style="marginRight: 0">delete</square-btn>
       </div>
       <div class="date">{{todoData.atWritten}}</div>
     </div>
@@ -25,7 +25,6 @@
 import { defineComponent } from 'vue';
 import CircleSwitch from '@/components/CircleSwitch.vue';
 import SquareBtn from '@/components/SquareBtn.vue';
-import { TodoType } from '@/types/TodoType';
 
 export default defineComponent({
   name: 'TodoItem',
@@ -45,8 +44,13 @@ export default defineComponent({
       });
     };
 
+    const deleteTodo = () : void => {
+      context.emit('deleteTodo', props.todoData?.id);
+    };
+
     return {
       changeIsDone,
+      deleteTodo,
     };
   },
 });
