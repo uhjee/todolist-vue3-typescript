@@ -2,14 +2,19 @@
   <div class="frame box">
     <div class="box__header">
       <div class="title-bar flex center-h">
-        <circle-btn />
-        <circle-btn color="red" />
-        <circle-btn color="yellow" />
-        <div
-          @click="changeTap(currentTab)"
-          class="change-tap-btn flex center-h"
-        >
+        <div class="btn-group">
+          <circle-btn />
+          <circle-btn color="red" />
+          <circle-btn color="yellow" />
+        </div>
+        <div class="title">
           {{ currentTabName }}
+        </div>
+        <div
+          class="change-tap-btn flex center-h"
+          @click="changeTap(currentTab)"
+        >
+          {{ otherTabName }}
           <span class="material-icons-outlined">
             chevron_right
           </span>
@@ -29,12 +34,7 @@
         @keyup.enter="addTodo"
         type="text"
       />
-      <square-btn
-        @click="addTodo"
-        color="red"
-        height="40"
-        >Add</square-btn
-      >
+      <square-btn @click="addTodo" color="red" height="40">Add</square-btn>
     </div>
   </div>
 </template>
@@ -67,6 +67,9 @@ export default defineComponent({
     };
 
     const currentTabName = computed(() =>
+      (currentTab.value === 'TODOLIST' ? 'Todolist' : 'Donelist'));
+
+    const otherTabName = computed(() =>
       (currentTab.value === 'TODOLIST' ? 'DONE' : 'TODO'));
 
     // inputTodo
@@ -101,6 +104,7 @@ export default defineComponent({
       currentTab,
       changeTap,
       currentTabName,
+      otherTabName,
       inputTodo,
       changeInputTodo,
       addTodo,
@@ -150,10 +154,15 @@ $grey: #b4b4b4;
         flex: none;
         // flex: 0 0 auto
       }
-      & :last-child {
-        margin-left: auto;
+      .title {
+        font-size: 1.2rem;
+        margin: 0 auto;
       }
+      // & :last-child {
+      //   margin-left: auto;
+      // }
       .change-tap-btn {
+        font-size: 0.8rem;
         cursor: pointer;
 
         &:hover {
