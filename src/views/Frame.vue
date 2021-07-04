@@ -5,10 +5,20 @@
         <circle-btn />
         <circle-btn color="red" />
         <circle-btn color="yellow" />
+        <div
+          @click="changeTap(currentTab)"
+          class="change-tap-btn flex center-h"
+        >
+          {{ currentTabName }}
+          <span class="material-icons-outlined">
+            chevron_right
+          </span>
+        </div>
       </div>
     </div>
     <div class="box__body">
-      <component ref="boxBody" :is="currentTab" />
+      <!-- <component ref="boxBody" :is="currentTab" /> -->
+      <todo-list :tab="currentTab" />
     </div>
 
     <div class="box__footer">
@@ -16,16 +26,22 @@
         class="input-todo"
         v-model="inputTodo"
         @input="changeInputTodo($event.target.value)"
+        @keyup.enter="addTodo"
         type="text"
       />
-      <square-btn @click="addTodo" color="red" height="40">Add</square-btn>
+      <square-btn
+        @click="addTodo"
+        color="red"
+        height="40"
+        >Add</square-btn
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import {
-  defineComponent, ref, onMounted, getCurrentInstance,
+  defineComponent, ref, getCurrentInstance, computed,
 } from 'vue';
 import SquareBtn from '@/components/SquareBtn.vue';
 import CircleBtn from '@/components/CircleBtn.vue';
@@ -43,8 +59,15 @@ export default defineComponent({
     const emitter = instance?.appContext.app.config.globalProperties.emitter;
     const c = chance();
 
-    // currentTab
-    const currentTab = ref('TodoList');
+    // currentTab 관련
+    const currentTab = ref('TODOLIST');
+
+    const changeTap = (tap: string): void => {
+      currentTab.value = tap === 'TODOLIST' ? 'DONELIST' : 'TODOLIST';
+    };
+
+    const currentTabName = computed(() =>
+      (currentTab.value === 'TODOLIST' ? 'DONE' : 'TODO'));
 
     // inputTodo
     const inputTodo = ref('');
@@ -53,13 +76,11 @@ export default defineComponent({
       inputTodo.value = value.trim();
     };
 
-    const boxBody = ref(null);
-
     const addTodo = (): void => {
       if (inputTodo.value.trim() === '') {
         return;
       }
-      if (currentTab.value === 'TodoList') {
+      if (currentTab.value === 'TODOLIST') {
         const newTodo: TodoType = {
           id: c.fbid(),
           color: 'red',
@@ -76,15 +97,13 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => {
-      console.log(boxBody.value);
-    });
     return {
+      currentTab,
+      changeTap,
+      currentTabName,
       inputTodo,
       changeInputTodo,
-      currentTab,
       addTodo,
-      boxBody,
     };
   },
 });
@@ -123,6 +142,25 @@ $grey: #b4b4b4;
     background-color: $green;
 
     height: 66px;
+
+    .title-bar {
+      width: 100%;
+
+      & > * {
+        flex: none;
+        // flex: 0 0 auto
+      }
+      & :last-child {
+        margin-left: auto;
+      }
+      .change-tap-btn {
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
   }
   .box__body {
     border-top: 1px solid $grey;

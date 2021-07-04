@@ -3,9 +3,9 @@
     <todo-item
       @changeIsDone="changeIsDone"
       @deleteTodo="deleteTodo"
-      v-for="todo in todoArr"
-      :key="todo.id"
-      :todoData="todo"
+      v-for="item in listData"
+      :key="item.id"
+      :todoData="item"
     ></todo-item>
   </div>
 </template>
@@ -14,24 +14,52 @@
 import { TodoType } from '@/types/TodoType';
 
 import {
-  defineComponent, getCurrentInstance, onMounted, ref, Ref,
+  defineComponent,
+  getCurrentInstance,
+  onMounted,
+  ref,
+  Ref,
+  toRefs,
+  watch,
 } from 'vue';
 import { makeTodoList } from '@/utils/TodoList';
-import { find, sortBy, remove } from 'lodash';
+import { remove } from 'lodash';
 import TodoItem from './TodoItem.vue';
 
 export default defineComponent({
-  name: 'TodoList',
+  name: 'List',
   components: { TodoItem },
-  setup() {
+  props: {
+    tab: {
+      type: String,
+    },
+  },
+  setup(props) {
     const instance = getCurrentInstance();
     const emitter = instance?.appContext.app.config.globalProperties.emitter;
 
-    const todoArr: Ref<TodoType[]> = ref([]);
+    const { tab } = toRefs(props);
 
+    const todoArr: Ref<TodoType[]> = ref([]);
+    const doneArr: Ref<TodoType[]> = ref([]);
+
+    const listData: Ref<TodoType[]> = ref([]);
+
+    // UI 리스트의 데이터로 사용될 배열
     const loadData = (): void => {
-      todoArr.value = makeTodoList(5);
+      todoArr.value = makeTodoList(5, 'TODO');
+      doneArr.value = makeTodoList(8, 'DONE');
     };
+
+    loadData();
+
+    watch(
+      () => tab.value,
+      (newTab) => {
+        listData.value = newTab === 'TODOLIST' ? todoArr.value : doneArr.value;
+      },
+      { immediate: true },
+    );
 
     // todo done list에 넣기
     // const appendData = (): void => {
@@ -47,38 +75,42 @@ export default defineComponent({
     //   }
     // };
 
-    const sortTodoArr = (): void => {
-      todoArr.value = sortBy(todoArr.value, ['isDone', 'id']);
-    };
+    // const sortTodoArr = (): void => {
+    //   todoArr.value = sortBy(todoArr.value, ['isDone', 'id']);
+    // };
 
     const changeIsDone = (todoData: TodoType) => {
-      const foundTodo = find(todoArr.value, { id: todoData.id }) as TodoType;
+      const foundTodo = remove(listData.value, {
+        id: todoData.id,
+      })[0] as TodoType;
       foundTodo.isDone = !foundTodo.isDone;
-      sortTodoArr();
+      if (tab.value === 'TODOLIST') {
+        doneArr.value.push(foundTodo);
+      } else {
+        todoArr.value.push(foundTodo);
+      }
     };
 
     const addTodo = (todoData: TodoType): void => {
+      console.log(todoData);
+
       todoArr.value.push(todoData);
-      sortTodoArr();
     };
 
     const deleteTodo = (todoId: string) => {
-      remove(todoArr.value, { id: todoId });
+      remove(listData.value, { id: todoId });
     };
 
     onMounted(() => {
-      loadData();
-      sortTodoArr();
-
       emitter.on('addTodo', (newTodo: TodoType) => {
-        // console.log(newTodo);
-
         addTodo(newTodo);
       });
     });
 
     return {
+      listData,
       todoArr,
+      doneArr,
       changeIsDone,
       addTodo,
       deleteTodo,

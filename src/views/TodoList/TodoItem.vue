@@ -9,14 +9,20 @@
       />
     </div>
     <div :class="['content', { 'content-done': todoData.isDone }]">
-      {{todoData.content}}
+      {{ todoData.content }}
     </div>
     <div class="etc">
-
-      <div class="delete-btn">
-        <square-btn @click="deleteTodo" color="yellow" style="marginRight: 0">delete</square-btn>
+      <div class="row">
+        <square-btn
+          @click="deleteTodo"
+          color="yellow"
+          height="22"
+          class="delete-btn"
+        >
+          <span class="material-icons-outlined">close</span>
+        </square-btn>
       </div>
-      <div class="date">{{todoData.atWritten}}</div>
+      <div class="date">{{ todoData.atWritten }}</div>
     </div>
   </div>
 </template>
@@ -29,7 +35,8 @@ import SquareBtn from '@/components/SquareBtn.vue';
 export default defineComponent({
   name: 'TodoItem',
   components: {
-    CircleSwitch, SquareBtn,
+    CircleSwitch,
+    SquareBtn,
   },
   props: {
     todoData: {
@@ -44,7 +51,7 @@ export default defineComponent({
       });
     };
 
-    const deleteTodo = () : void => {
+    const deleteTodo = (): void => {
       context.emit('deleteTodo', props.todoData?.id);
     };
 
@@ -104,7 +111,11 @@ export default defineComponent({
       align-items: center;
     }
     .delete-btn {
-      font-size: 0.8rem;
+      margin-right: 0;
+      padding: 0 6px;
+      .material-icons-outlined {
+        font-size: 0.8rem;
+      }
     }
     .date {
       font-size: 0.8rem;

@@ -11,9 +11,10 @@ const COLORS = ['red', 'blue', 'grey', 'yellow', 'green'];
  *
  * @return  {TodoType}[return description]
  */
-export const makeTodo = (): TodoType => ({
+export const makeTodo = (isDone: boolean): TodoType => ({
   id: c.fbid(),
-  isDone: [false, true][Math.floor(Math.random() * 10) % 2], // 랜덤 생성 true or false
+  // isDone: [false, true][Math.floor(Math.random() * 10) % 2], // 랜덤 생성 true or false
+  isDone, // 랜덤 생성 true or false
   color: COLORS[Math.floor(Math.random() * 10) % 5], // 랜던 생성
   content: c.paragraph(),
   atWritten: ((d: Date) =>
@@ -26,5 +27,5 @@ export const makeTodo = (): TodoType => ({
  * @param   {number[]}    max  [max description]
  * @return  {TodoType[]}       [return description]
  */
-export const makeTodoList = (max: number): TodoType[] =>
-  R.range(1, max + 1).map(() => makeTodo());
+export const makeTodoList = (max: number, status: string): TodoType[] =>
+  R.range(1, max + 1).map(() => makeTodo(status === 'DONE'));
