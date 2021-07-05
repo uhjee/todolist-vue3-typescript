@@ -22,7 +22,6 @@
       </div>
     </div>
     <div class="box__body">
-      <!-- <component ref="boxBody" :is="currentTab" /> -->
       <todo-list :tab="currentTab" />
     </div>
 
