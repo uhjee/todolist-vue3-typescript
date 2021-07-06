@@ -6,8 +6,6 @@
 
 ## About
 
----
-
 - 간단한 todolist 로직을 통해 책과 강의로 익힌 스택들을 연습하기 위한 토이 프로젝트
 - Vue3의 Composition API를 통해 공통 관심사에 집중
 - Figma 를 통한 디자인 연습
@@ -15,8 +13,6 @@
 - chance 라이브러리를 사용해 랜덤의 테스트 데이터 생성
 
 ## Stack
-
----
 
 - Vue.js(3.00)
 - Javascript
