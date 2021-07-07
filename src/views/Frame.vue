@@ -1,5 +1,5 @@
 <template>
-  <div class="frame box">
+  <div :class="['frame', { done: isDonelist }]">
     <div class="box__header">
       <div class="title-bar flex center-h">
         <div class="btn-group">
@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="box__body">
+    <div :class="['box__body']">
       <todo-list :tab="currentTab" />
     </div>
 
@@ -71,6 +71,8 @@ export default defineComponent({
     const otherTabName = computed(() =>
       (currentTab.value === 'TODOLIST' ? 'DONE' : 'TODO'));
 
+    const isDonelist = computed(() => currentTab.value === 'DONELIST');
+
     // inputTodo
     const inputTodo = ref('');
 
@@ -102,6 +104,7 @@ export default defineComponent({
     return {
       currentTab,
       changeTap,
+      isDonelist,
       currentTabName,
       otherTabName,
       inputTodo,
@@ -113,10 +116,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-$white: #eaeff0;
-$green: #d2dbd7;
-$grey: #b4b4b4;
-
 .frame {
   display: flex;
   flex-direction: column;
@@ -134,6 +133,15 @@ $grey: #b4b4b4;
   border-radius: 10px;
   box-shadow: 2px 2px 2px 1px rgba($color: #858585, $alpha: 0.2);
 
+  transition: background-color 0.5s;
+
+  &.done {
+    background-color: rgba($color: $yellow, $alpha: 0.05 );
+    .box__header {
+      background-color: $red;
+      color: #fff;
+    }
+  }
   & > * {
     padding: 6px 12px;
     display: flex;
@@ -155,6 +163,8 @@ $grey: #b4b4b4;
       }
       .title {
         font-size: 1.2rem;
+        letter-spacing: 0.08rem;
+
         margin: 0 auto;
       }
       // & :last-child {

@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-container">
+  <div :class="['todo-container']">
     <todo-item
       @changeIsDone="changeIsDone"
       @deleteTodo="deleteTodo"
@@ -48,7 +48,7 @@ export default defineComponent({
     // UI 리스트의 데이터로 사용될 배열
     const loadData = (): void => {
       todoArr.value = makeTodoList(5, 'TODO');
-      doneArr.value = makeTodoList(8, 'DONE');
+      doneArr.value = makeTodoList(16, 'DONE');
     };
 
     loadData();
@@ -61,7 +61,7 @@ export default defineComponent({
       { immediate: true },
     );
 
-    // todo done list에 넣기
+    // todo done list에 넣기 - 무한 스크롤
     // const appendData = (): void => {
     //   const {
     //     scrollHeight,
