@@ -77,7 +77,7 @@ export default defineComponent({
     const inputTodo = ref('');
 
     const changeInputTodo = (value: string): void => {
-      inputTodo.value = value.trim();
+      inputTodo.value = value;
     };
 
     const addTodo = (): void => {
@@ -136,7 +136,7 @@ export default defineComponent({
   transition: background-color 0.5s;
 
   &.done {
-    background-color: rgba($color: $yellow, $alpha: 0.05 );
+    background-color: rgba($color: $yellow, $alpha: 0.05);
     .box__header {
       background-color: $red;
       color: #fff;
@@ -206,7 +206,7 @@ export default defineComponent({
       outline: none;
       border: none;
       border-radius: 3px;
-      background-color: $white;
+      background-color: #fff;
     }
   }
 }

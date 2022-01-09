@@ -70,6 +70,7 @@ export default defineComponent({
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  background-color: #fff;
 
   border: 1px solid #999;
   border-radius: 3px;
